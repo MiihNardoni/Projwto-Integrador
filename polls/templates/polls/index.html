@@ -1,9 +1,12 @@
 {% if latest_question_list %}
     <ul>
         {% for question in latest_question_list %}
-            <li><a href="/enquetes/{{ question.id}}/">{{ question.question_text }}</a>></li>
+            <li><a href="/enquetes/{{ question.id}}/">
+            {{ question.question_text }}
+            </a>></li>
+
         {% endfor %}
-            </ul>
-        {% else %}
-            <p>No polls are avalable.</p>>
-        {% endif %}
+    </ul>
+{% else %}
+    <p>No polls are avalable.</p>>
+{% endif %}

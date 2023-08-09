@@ -1,17 +1,18 @@
 {% extends "polls/base.html" %}
+
 {% block title %}Pagina Inicial{% endblock title %}
 
 {% block content %}
     {% if latest_question_list %}
         <ul>
             {% for question in latest_question_list %}
-                <li><a href="/enquetes/{{ question.id}}/">
+                <li><a href="{% url 'detail' question.id %}">
                 {{ question.question_text }}
-                </a>></li>
+                </a></li>
 
             {% endfor %}
         </ul>
     {% else %}
-        <p>No polls are avalable.</p>>
+        <p>Nenhuma enquete disponível.</p>
     {% endif %}
 {% endblock content %}

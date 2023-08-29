@@ -19,3 +19,16 @@ def results(request, question_id):
 
 def vote(request, question_id):
     return HttpResponse("Você está votando em uma enquete %s." % question_id)
+
+from django.viwes.generic.edit import CreateView, ListView
+from django.urls import reverse_lazy
+
+class QuestionCreateView(CreateView):
+    model = Question
+    fields = ('question_txt', 'pub_date')
+    success_url = reverse_lazy('index')
+    template_name = 'polls/question_form.html'
+
+class QuestionView(ListView):
+    model = Question
+    context_onject_name = 'questions'

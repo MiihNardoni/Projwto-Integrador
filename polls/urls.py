@@ -1,8 +1,8 @@
 from django.urls import path
+
 from . import views
 
 urlpatterns = [
-    # funcion based views
     # ex: /polls/
     #path("", views.index, name="index"),
     # ex: /polls/5/
@@ -12,13 +12,10 @@ urlpatterns = [
     # ex: /polls/5/vote/
     #path("<int:question_id>/vote/", views.vote, name="vote"),
 
-    # class based views
+    #class based views
     path('listar', views.QuestionListView.as_view(), name="question-list"),
-    
     path('cadastrar', views.QuestionCreateView.as_view(), name="question-create"),
-    
     path('<int:pk>', views.QuestionDetailView.as_view(), name="question-detail"),
-    
-    path('<int:pk>/deletar', views.QuestionDeleteView.as_view(), name="question-delete")
-
+    path('<int:pk>/deletar', views.QuestionDeleteView.as_view(), name="question-delete"),
+    path('<int:pk/atualizar', views.QuestionUpdateView.as_view(), name="question-update")
 ]

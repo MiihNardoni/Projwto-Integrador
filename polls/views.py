@@ -1,7 +1,7 @@
 from ast import Delete
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
-from .models import Question
+from .models import Question, Choice
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -55,8 +55,68 @@ class QuestionListView(ListView):
 
 class QuestionUpdateView(UpdateView):
     model = Question
-    success_url = reverse_lazy('question-list')
+    template_name = 'polls/question_form.html'
     fiels = ('question_text',)
+    success_url = reverse_lazy('question-list')
+    success_message - 'Enquete atualizada com sucesso!'
+
+    def get_context_data(self, **kwargs)
+        context = super(QuestionUpdateView, self).get_context_data(**kwargs)
+        context['form_title'] = choices
+
+        return context
+
+    def form_valid(self, request, *args, **kwargs):
+        messsages.success(self.request, self.success_message)
+
+        return super(QuestionUpdateView, self).form_valid(request, *args, **kwargs)
+
+class ChoiceCreateView(CreateView):
+    model = Choice
+    template_name = 'polls/choice_form.html'
+    fields =('choice_text', )
+    success_message = 'Opção de voto regisitrada com sucesso!'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.questuin - get_object_or_404(Question, pk=self.kwargs.get('pk'))
+
+        return super(ChoiceCreateView, self).dispatch(request, *args. **kwargs)
+
+    def get_context_data(self, **kwargs):
+        question = get_object_or_404(Question, pk=self.kwargs.get('pk'))
+
+        context = super(ChoiceCreateView, self).get_context_data(**kwargs)
+        context['form_title'] = f'Alternativa para: {question.question_text}'
+
+        return context
+
+    def form_valid(self, form):
+            form.instance.question = self.question
+            messsages.success(self.request, self.success_message)
+
+            return super(ChoiceCreateView, self).form_valid(form)
+
+    def get_success_url(self, *args, **kwargs):
+            question_id = self.kwargs.get('pk')
+            
+            return reverse_lazy('poll_edit', kwargs={'pk': question_id})
+
+class ChoiceUpdateView(UpdateView):
+    model: Choice
+    template_name = 'polls/choice_form.html'
+    fields = ('choice_text', )
+    success_message = 'Alternativa atualizada com sucesso!'
+
+    def get_context_data(self, **kwargs):
+        context = super(ChoiceUpdateView, self).get_context_data(**kwargs)
+        context['form_tittle'] = 'Editando Alternativa...'
+
+        return context
+    
+    def form_valid(self, request, *args, **kwargs):
+        messsages.success(self.request, self.success_message)
+
+        return super(ChoiceUpdateView, self).fotm_valid(request, *args, **kwargs)
 
 @login_required
 def sobre(request):

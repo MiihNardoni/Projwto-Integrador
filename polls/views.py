@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from .models import Question, Choice
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms.models import BaseModeForm
+from django.shortcuts import render, get_object_or_404
 
 
 def index(request):
@@ -62,7 +64,11 @@ class QuestionUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs)
         context = super(QuestionUpdateView, self).get_context_data(**kwargs)
-        context['form_title'] = choices
+        context['form_title'] = 'Editando a pergunta'
+
+        question_id = self.kwargs.get('pk')
+        choices = Choice.objects.filter(question__pk=question_id)
+        context['question_choices'] = choices
 
         return context
 
@@ -116,7 +122,27 @@ class ChoiceUpdateView(UpdateView):
     def form_valid(self, request, *args, **kwargs):
         messsages.success(self.request, self.success_message)
 
-        return super(ChoiceUpdateView, self).fotm_valid(request, *args, **kwargs)
+        return super(ChoiceUpdateView, self).form_valid(request, *args, **kwargs)
+
+    def get_success_url(self, *args, **kwargs):
+        question_id = self.object.question.id
+
+        return reverse_lazy('poll_edit', kwargs={'pk': question_id})
+
+class ChoiceDeleteView(LoginRequireMixin, DeleteView):
+      model: Choice
+    template_name ='polls/choice_confirm_delete_form.html'
+    success_message ='Alternativa excluída com sucesso!'
+
+    def form_valid(self, request, *args, **kwargs):
+        messsages.success(self.request, self.success_message)
+
+        return super(ChoiceDeleteView, self).form_valid(request, *args, **kwargs)
+
+    def get_success_url(self, *args, **kwargs):
+        question_id = self.object.question.id
+
+        return reverse_lazy('poll_edit', kwargs={'pk': question_id})
 
 @login_required
 def sobre(request):

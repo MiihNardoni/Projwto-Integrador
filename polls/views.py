@@ -130,7 +130,7 @@ class ChoiceUpdateView(UpdateView):
         return reverse_lazy('poll_edit', kwargs={'pk': question_id})
 
 class ChoiceDeleteView(LoginRequireMixin, DeleteView):
-      model: Choice
+    model: Choice
     template_name ='polls/choice_confirm_delete_form.html'
     success_message ='Alternativa excluída com sucesso!'
 
@@ -145,5 +145,3 @@ class ChoiceDeleteView(LoginRequireMixin, DeleteView):
         return reverse_lazy('poll_edit', kwargs={'pk': question_id})
 
 @login_required
-def sobre(request):
-    return HttpResponse('Este é um app de enquete!')

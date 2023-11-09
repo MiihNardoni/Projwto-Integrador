@@ -130,5 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/enquetes/listar'
 LOGOUT_REDIRECT_URL = '/enquetes/listar'
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 MEDIA_URL = '/media/' # Caminho para servir os arquivos de mídia
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files/') # Armazenamento dos arquivos

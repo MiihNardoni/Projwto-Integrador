@@ -3,13 +3,35 @@
 {% block content %}
 
     <h1> Detalhes da Enquete </h1>
-    <p> {{ question.question_text }} </p>
 
-    <p>Data da publicação: {{ question.pub_date }} </p>
+    <div class="card-body">
 
-    <ul>
-        <li><a href="{% url 'question-list' %}">Listar Enquetes</a></li>
-        <li><a href="{% url 'question-delete' question.pk %}">Deletar Enquete</a></li>
-    </ul>
+        {% if question.author %}
+
+        <span>Autor: {{ question.author.username }}</span>
+
+        {% endif %} <br>
+    
+        <p> {{ question.question_text }} </p>
+
+        <p>Data da publicação: {{ question.pub_date }} </p>
+        <p>{{ question.desc }}</p>
+
+        <ul>
+
+            <li><a href="{% url 'question-list' %}">
+                Listar Enquetes
+            </a></li>
+
+            <a href="{% url 'poll_edit' pk=question.id %}" class="link-secondary">
+            Editar Enquente
+            </a> &nbsp;
+
+            <li><a href="{% url 'poll_delete' pk=question.id %}" class="link-secondary">
+                Deletar Enquete
+            </a></li>
+
+        </ul>
+    </div>
+
 {% endblock content %}
-

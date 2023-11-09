@@ -1,13 +1,18 @@
-from ast import Delete
-from django.shortcuts import get_object_or_404, render
+from django.forms.models import BaseModeForm
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Question, Choice
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.generic import DetailView, ListView, TemplateView
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.forms.models import BaseModeForm
-from django.shortcuts import render, get_object_or_404
+from django.db.models import Sum
 
+from ast import Delete
+from .models import Question, Choice
 
+@login_required
 def index(request):
     latest_question_list = Question.objects.order_by("-pub_date")[:5]
     context = {"latest_question_list": latest_question_list}
@@ -69,8 +74,9 @@ class QuestionCreateView(LoginRequiredMixin, CreateView):
     success_message = 'Pergunta criada com sucesso!'
 
     def get_context_data(self, **kwargs):
-        CONTEXT = super(QuestionCreateView, self).get_context_data(**kwargs)
-        context['form_title'] = 'Criando uma pergunta'
+        context = super(QuestionCreateView, self).get_context_data(**kwargs)
+        votes = Choice.objects.filter(question=context['question']).aggregate(total=Sum('votes')) or 0
+        context['total_votes'] = votes.get('total')
 
         return context
     
@@ -87,7 +93,15 @@ class QuestionListView(ListView):
 
 class QuestionDetailView(DetailView):
     model = Question
+    template_name = 'polls/question_detail.html'
     context_object_name = 'question'
+
+    def get_context_data(self, **kwargs):
+        context = super(QuestionDeleteView, self). get_context_data(**kwargs)
+        votes = Choice.objects.filter(question=context['question']).aggregate(total=Sum('votes')) or 0
+        context['total_votes'] = votes.get('total')
+
+        return context
 
 class QuestionDeleteView(DeleteView):
     model = Question

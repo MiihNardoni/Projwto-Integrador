@@ -1,9 +1,9 @@
-from django.forms.models import BaseModeForm
+from django.forms.models import BaseModelForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from django.generic import DetailView, ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -47,7 +47,7 @@ def results(request, question_id):
 
 
 def vote(request, question_id):
-    question = get_object_or_404(Question_id)
+    question = get_object_or_404(question_id)
     if request.method == 'POST':
         try:
             selected_choice = question.choice_set.get(pk=request.POST["choice"])
@@ -82,7 +82,7 @@ class QuestionCreateView(LoginRequiredMixin, CreateView):
     
     def form_valid(self, form):
         form.instance.author = self.request.User
-        dessages.success(self.request, self.success_message)
+        messages.success(self.request, self.success_message)
         return super(QuestionCreateView, self). form_valid(form)
 
 class QuestionListView(ListView):
@@ -118,9 +118,9 @@ class QuestionUpdateView(UpdateView):
     template_name = 'polls/question_form.html'
     fiels = ('question_text',)
     success_url = reverse_lazy('question-list')
-    success_message - 'Enquete atualizada com sucesso!'
+    success_message = 'Enquete atualizada com sucesso!'
 
-    def get_context_data(self, **kwargs)
+    def get_context_data(self, **kwargs):
         context = super(QuestionUpdateView, self).get_context_data(**kwargs)
         context['form_title'] = 'Editando a pergunta'
 
@@ -131,7 +131,7 @@ class QuestionUpdateView(UpdateView):
         return context
 
     def form_valid(self, request, *args, **kwargs):
-        messsages.success(self.request, self.success_message)
+        messages.success(self.request, self.success_message)
 
         return super(QuestionUpdateView, self).form_valid(request, *args, **kwargs)
 
@@ -142,9 +142,9 @@ class ChoiceCreateView(CreateView):
     success_message = 'Opção de voto regisitrada com sucesso!'
 
     def dispatch(self, request, *args, **kwargs):
-        self.questuin - get_object_or_404(Question, pk=self.kwargs.get('pk'))
+        self.question - get_object_or_404(Question, pk=self.kwargs.get('pk'))
 
-        return super(ChoiceCreateView, self).dispatch(request, *args. **kwargs)
+        return super(ChoiceCreateView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         question = get_object_or_404(Question, pk=self.kwargs.get('pk'))
@@ -156,7 +156,7 @@ class ChoiceCreateView(CreateView):
 
     def form_valid(self, form):
             form.instance.question = self.question
-            messsages.success(self.request, self.success_message)
+            messages.success(self.request, self.success_message)
 
             return super(ChoiceCreateView, self).form_valid(form)
 
@@ -178,7 +178,7 @@ class ChoiceUpdateView(UpdateView):
         return context
     
     def form_valid(self, request, *args, **kwargs):
-        messsages.success(self.request, self.success_message)
+        messages.success(self.request, self.success_message)
 
         return super(ChoiceUpdateView, self).form_valid(request, *args, **kwargs)
 
@@ -187,13 +187,13 @@ class ChoiceUpdateView(UpdateView):
 
         return reverse_lazy('poll_edit', kwargs={'pk': question_id})
 
-class ChoiceDeleteView(LoginRequireMixin, DeleteView):
+class ChoiceDeleteView(LoginRequiredMixin, DeleteView):
     model: Choice
     template_name ='polls/choice_confirm_delete_form.html'
     success_message ='Alternativa excluída com sucesso!'
 
     def form_valid(self, request, *args, **kwargs):
-        messsages.success(self.request, self.success_message)
+        messages.success(self.request, self.success_message)
 
         return super(ChoiceDeleteView, self).form_valid(request, *args, **kwargs)
 
@@ -202,4 +202,3 @@ class ChoiceDeleteView(LoginRequireMixin, DeleteView):
 
         return reverse_lazy('poll_edit', kwargs={'pk': question_id})
 
-@login_required

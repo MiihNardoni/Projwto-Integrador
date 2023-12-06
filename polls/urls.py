@@ -29,10 +29,10 @@ urlpatterns = [
     path('cadastrar', views.QuestionCreateView.as_view(), name="question-create"),
     path('<int:pk>', views.QuestionDetailView.as_view(), name="question-detail"),
     path('<int:pk>/deletar', views.QuestionDeleteView.as_view(), name="question-delete"),
-    path('<int:pk/atualizar', views.QuestionUpdateView.as_view(), name="question-update")
+    path('<int:pk/atualizar', views.QuestionUpdateView.as_view(), name="question-update"),
     
     #rotas para criar, editar e deletar alternativas de perguntas
-    path('pergunta/<int:pk>/alternativa/add', views.ChoiceCreateView.as_view(), name"choice_add")
-    path('pergunta/<int:pk>/alternativa/edit', views.ChoiceUpdateView.as_view(), name"choice_edit")
-    path('pergunta/<int:pk>/alternativa/delete', views.ChoiceDeleteView.as_view(), name"choice_delete")
+    path('pergunta/<int:pk>/alternativa/add', views.ChoiceCreateView.as_view(), name="choice_add"),
+    path('pergunta/<int:pk>/alternativa/edit', views.ChoiceUpdateView.as_view(), name="choice_edit"),
+    path('pergunta/<int:pk>/alternativa/delete', views.ChoiceDeleteView.as_view(), name="choice_delete")
 ]

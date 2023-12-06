@@ -54,8 +54,8 @@ class Question(models.Model):
     author = models.ForeignKey(
         User, # chave estrangeira vinculada ao usuário
         editable=False, # não permite editar
-        on_delete+models.DO_NOTHING, # não exclui a pergunta se o autor for removido
-        null+True # permite autor NULL para não conflitar com registros já existentes
+        on_delete=models.DO_NOTHING, # não exclui a pergunta se o autor for removido
+        null=True # permite autor NULL para não conflitar com registros já existentes
     )
 
     def was_published_recently(self):
